@@ -158,12 +158,13 @@ def tan_t(x):
     division = div_t(cos[0])
     if division[1] == False:
         return [0, False, division[2], 0]
-    
+
     sin = sin_t(x)
     if sin[1] == False:
         return [0, False, sin[2], 0]
-    
+
     return [sin[0] * division[0], True, "Success", 0]
+
 
 def ln_t(a):
     """
@@ -181,7 +182,7 @@ def ln_t(a):
         division1 = div_t(2 * iter + 1)
         if division1[1] == False:
             return [act, False, division1[2], iter]
-        
+
         division2 = div_t(a + 1)
         if division2[1] == False:
             return [act, False, division2[2], iter]
@@ -191,7 +192,7 @@ def ln_t(a):
     division3 = div_t(a + 1)
     if division3[1] == False:
         return [act, False, division3[2], iter]
-    return [2 * (a - 1) * div_t(a + 1)[0] * act, True, "Success", iter]
+    return [2 * (a - 1) * division3[0] * act, True, "Success", iter]
 
 
 def log_t(x, a):
@@ -201,7 +202,19 @@ def log_t(x, a):
     Salidas: log_a(x)
     Restricciones: x y a deben ser números reales positivos diferentes de 1
     """
-    return ln_t(x)[0] * div_t(ln_t(a)[0])[0]
+    lnx = ln_t(x)
+    if lnx[1] == False:
+        return [0, False, lnx[2], 0]
+
+    lna = ln_t(a)
+    if lna[1] == False:
+        return [0, False, lna[2], 0]
+
+    division = div_t(lna[0])
+    if division[1] == False:
+        return [0, False, division[2], 0]
+
+    return [lnx[0] * division[0], True, "Success", 0]
 
 
 def power_t(x, y):
@@ -254,7 +267,11 @@ def root_t(x, y):
     prev = x * 0.5
 
     for n in range(iterMax):
-        act = prev - (power_t(prev, y) - x) * div_t(y * power_t(prev, y - 1))[0]
+        division = div_t(y * power_t(prev, y - 1))
+        if division[1] == False:
+            return [act, False, division[2], n]
+
+        act = prev - (power_t(prev, y) - x) * division[0]
 
         if abs(act - prev) < tol * act:
             return [act, True, "Success", n]
@@ -277,19 +294,16 @@ def asin_t(a):
         return [-1, False, "Input must be between -1 and 1", 0]
 
     if a == 1:
-        return [pi_t / 2, True, "Success", 0]
+        return [pi_t * 0.5, True, "Success", 0]
     elif a == -1:
-        return [-pi_t / 2, True, "Success", 0]
+        return [-pi_t * 0.5, True, "Success", 0]
 
     for n in range(iterMax):
         division = div_t(power_t(4, n) * power_t(factorial_t(n), 2) * (2 * n + 1))
         if division[1] == False:
             return [act, False, division[2], n]
-        act += (
-            factorial_t(2 * n)
-            * division[0]
-            * power_t(a, 2 * n + 1)
-        )
+        
+        act += factorial_t(2 * n) * division[0] * power_t(a, 2 * n + 1)
 
         if abs(act - prev) < tol:
             return [act, True, "Success", n]
@@ -313,7 +327,7 @@ def atan_t(a):
     elif a == -1:
         return [-pi_t * 0.25, True, "Success", 0]
 
-    if a > -1 and a < 1:
+    if a >= -1 and a <= 1:
         for n in range(iterMax):
             division = div_t(2 * n + 1)
             if division[1] == False:
@@ -328,7 +342,7 @@ def atan_t(a):
 
     else:
         isNegative = False
-        if a < -1:
+        if a < 0:
             a = -a
             isNegative = True
 
@@ -336,28 +350,28 @@ def atan_t(a):
             division = div_t((2 * n + 1) * power_t(a, 2 * n + 1))
 
             if division[1] == False:
-
                 if a > 1:
                     return [pi_t * 0.5 - act, False, division[2], n]
-                
+
                 else:
                     return [-pi_t * 0.5 - act, False, division[2], n]
-                
+
             act += power_t(-1, n) * division[0]
 
             if abs(act - prev) < tol:
 
-                if a > 1:
-                    return [pi_t * 0.5 - act, True, "Success", n]
-                
-                else:
+                if isNegative:
                     return [-pi_t * 0.5 - act, True, "Success", n]
+
+                else:
+                    return [pi_t * 0.5 - act, True, "Success", n]
             prev = act
 
         else:
+
             if isNegative:
                 return [-pi_t * 0.5 - act, False, "Iteration limit reached", iterMax]
-            
+
             else:
                 return [pi_t * 0.5 - act, False, "Iteration limit reached", iterMax]
 
@@ -492,13 +506,13 @@ print("asin 1: ", asin_t(1))
 print("asin -0.707193123: ", asin_t(-0.707193123))
 print("asin 0.707193123: ", asin_t(0.707193123))
 print("asin 0.5: ", asin_t(0.5))
-print("asin 0.25: ", asin_t(0.25))
+print("asin -0.25: ", asin_t(0.25))
 print("asin 0.75: ", asin_t(0.75))
-print("asin 0.125: ", asin_t(0.125))
+print("asin -0.125: ", asin_t(0.125))
 print("asin 0.875: ", asin_t(0.875))
-print("asin 0.0625: ", asin_t(0.0625))
+print("asin -0.0625: ", asin_t(0.0625))
 print("asin 0.03125: ", asin_t(0.03125))
-print("asin 0.015625: ", asin_t(0.015625))
+print("asin -0.015625: ", asin_t(0.015625))
 
 print("")
 print("atan_t")
@@ -556,6 +570,19 @@ print("atan -7: ", atan_t(-7))
 
 print("")
 print("acos_t")
+print("acos 0: ", acos_t(0))
+print("acos 1: ", acos_t(1))
+print("acos -0.707193123: ", acos_t(-0.707193123))
+print("acos 0.707193123: ", acos_t(0.707193123))
+print("acos 0.5: ", acos_t(0.5))
+print("acos 0.25: ", acos_t(0.25))
+print("acos 0.75: ", acos_t(0.75))
+print("acos 0.125: ", acos_t(0.125))
+print("acos 0.875: ", acos_t(0.875))
+print("acos 0.0625: ", acos_t(0.0625))
+print("acos 0.03125: ", acos_t(0.03125))
+print("acos 0.015625: ", acos_t(0.015625))
+
 
 print("")
 print("sec_t")
