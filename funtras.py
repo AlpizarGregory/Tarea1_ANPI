@@ -5,7 +5,6 @@ iterMax = 2500
 pi_t = 3.14159265358979323846
 eps = 2.2204e-16
 
-
 # qué pasa si el número es mayor a iterMax?
 def factorial_t(x):
     """
@@ -41,13 +40,13 @@ def div_t(a):
     prev = 0
     if factorial_t(0) < a and a < factorial_t(20):
         prev = power_t(eps, 2)
-    elif factorial_t(20)-1 < a < factorial_t(40):
+    elif factorial_t(20) <= a < factorial_t(40):
         prev = power_t(eps, 4)
-    elif factorial_t(40)-1 < a < factorial_t(60):
+    elif factorial_t(40) <= a < factorial_t(60):
         prev = power_t(eps, 8)
-    elif factorial_t(60)-1 < a < factorial_t(80):
+    elif factorial_t(60) <= a < factorial_t(80):
         prev = power_t(eps, 11)
-    elif factorial_t(80)-1 < a < factorial_t(100):
+    elif factorial_t(80) <= a < factorial_t(100):
         prev = power_t(eps, 15)
     else:
         return [-1, False, "Division by zero: overflow", 0]
@@ -136,10 +135,10 @@ def tan_t(x):
     Entradas: x es el ángulo en radianes
     Salidas: tan(x)
     Restricciones: x debe ser un número real diferente de pi/2"""
-    if cos_t(x) == 0:
-        return "Division by zero"
+    if (cos_t(x)[0] < tol):
+        return [-1, False, "Division by zero", 0]
     else:
-        return sin_t(x)[0] * div_t(cos_t(x))[0]
+        return [sin_t(x)[0] * div_t(cos_t(x)[0])[0], True, "Success", 0]
 
 
 def ln_t(a):
@@ -155,10 +154,10 @@ def ln_t(a):
 
     while abs(act - prev) < tol and iter < iterMax:
         prev = act
-        act += div_t(2 * iter + 1) * power_t((a - 1) * div_t(a + 1), 2 * iter)
+        act += div_t(2 * iter + 1)[0] * power_t((a - 1) * div_t(a + 1)[0], 2 * iter)
         iter += 1
 
-    return 2 * (a - 1) * div_t(a + 1) * act
+    return [2 * (a - 1) * div_t(a + 1)[0] * act, True, "Success", iter]
 
 
 def log_t(x, a):
@@ -168,7 +167,7 @@ def log_t(x, a):
     Salidas: log_a(x)
     Restricciones: x y a deben ser números reales positivos diferentes de 1
     """
-    return ln_t(x) * div_t(ln_t(a))
+    return ln_t(x)[0] * div_t(ln_t(a)[0])[0]
 
 
 def power_t(x, y):
@@ -176,7 +175,7 @@ def power_t(x, y):
     Calcula el valor de x^y
     Entradas: x es la base, y es el exponente
     Salidas: x^y
-    Restricciones: x debe ser un número real, y debe ser un número real
+    Restricciones: tanto x como y deben ser números reales
     """
     return x**y
 
@@ -192,11 +191,40 @@ def tanh_t(x):
 
 
 def sqrt_t(x):
-    pass
+    """
+    Calcula el valor de sqrt(x)
+    Entradas: x es el radicando
+    Salidas: sqrt(x)
+    Restricciones: x debe ser un número real positivo
+    """
+    return root_t(x, 2)
 
 
 def root_t(x, y):
-    pass
+    """
+    Calcula el valor de x^(1/y)
+    Entradas: x es la base, y es el exponente
+    Salidas: x^(1/y)
+    Restricciones: x debe ser un número real positivo, y debe ser un número real positivo diferente de 0
+    """
+    if x < 0:
+        return [-1, False, "Input must be positive", 0]
+    elif y == 0:
+        return [-1, False, "Division by zero", 0]
+    elif y == 1:
+        return [x, True, "Success", 0]
+    
+    act = 0
+    prev = x * 0.5
+
+    for n in range(iterMax):
+        act = prev - (power_t(prev,y) - x) * div_t(y * power_t(prev, y - 1))[0]
+
+        if abs(act - prev) < tol * act:
+            return [act, True, "Success", n]
+        prev = act
+    else:
+        return [act, True, "Iteration limit reached", iterMax]
 
 
 def asin_t(x):
@@ -263,9 +291,8 @@ print("")
 print("cos_t")
 print("cos 0: ", cos_t(0))
 print("cos pi: ", cos_t(pi_t))
+print("cos pi/2: ", cos_t(pi_t/2))
 print("cos pi/4: ", cos_t(pi_t/4))
-print("cos 180: ", cos_t(180))
-print("cos 270: ", cos_t(270))
 
 print("")
 print("tan_t")
@@ -316,6 +343,9 @@ print("sqrt_t")
 
 print("")
 print("root_t")
+print("root 2, 2: ", root_t(2, 2))
+print("root 3, 2: ", root_t(3, 3))
+print("root 4, 2: ", root_t(4, 2))
 
 print("")
 print("asin_t")
