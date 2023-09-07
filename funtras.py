@@ -31,8 +31,8 @@ def div_t(a):
     Salidas: 1/a
     Restricciones: a debe ser positivo
     """
-    if a == 0:
-        return [-1, False, "Division by zero: input", 0]
+    if a < tol:
+        return [-1, False, "Division by zero: input is zero", 0]
     elif a == 1:
         return [1, True, "Success"]
     elif a < 0:
@@ -50,7 +50,7 @@ def div_t(a):
     elif factorial_t(80) <= a < factorial_t(100):
         prev = power_t(eps, 15)
     else:
-        return [-1, False, "Division by zero: overflow", 0]
+        return [0, False, "Infinity output: overflow", 0]
 
     iter = 0
     act = 0
@@ -136,7 +136,11 @@ def tan_t(x):
     Entradas: x es el ángulo en radianes
     Salidas: tan(x)
     Restricciones: x debe ser un número real diferente de pi/2"""
-    if cos_t(x)[0] < tol:
+
+    while x > 2 * pi_t:
+        x -= 2 * pi_t
+    
+    if x == pi_t * 0.5:
         return [-1, False, "Division by zero", 0]
     else:
         return [sin_t(x)[0] * div_t(cos_t(x)[0])[0], True, "Success", 0]
@@ -289,6 +293,10 @@ def atan_t(a):
 
     else:
         for n in range(iterMax):
+            if n > 500:
+                return [act, False, "Test iteration reached", n]
+            #print("iter: ", n)
+            #print("value: ", act)
             act += power_t(-1, n) * div_t((2*n+1)*power_t(a, 2*n+1))[0]
 
             if abs(act - prev) < tol:
@@ -441,13 +449,62 @@ print("asin 0.75: ", asin_t(0.75))
 print("asin 0.125: ", asin_t(0.125))
 print("asin 0.875: ", asin_t(0.875))
 print("asin 0.0625: ", asin_t(0.0625))
-print("asin -0.9375: ", asin_t(-0.9375))
 print("asin 0.03125: ", asin_t(0.03125))
-print("asin 0.96875: ", asin_t(0.96875))
 print("asin 0.015625: ", asin_t(0.015625))
 
 print("")
 print("atan_t")
+print("entre -1 y 1")
+print("atan 0: ", atan_t(0))
+print("atan 1: ", atan_t(1))
+print("atan -1: ", atan_t(-1))
+print("atan 0.5: ", atan_t(0.5))
+print("atan -0.5: ", atan_t(-0.5))
+print("atan 0.25: ", atan_t(0.25))
+print("atan -0.25: ", atan_t(-0.25))
+print("atan 0.75: ", atan_t(0.75))
+print("atan -0.75: ", atan_t(-0.75))
+print("atan 0.125: ", atan_t(0.125))
+print("atan -0.125: ", atan_t(-0.125))
+print("atan 0.875: ", atan_t(0.875))
+print("atan -0.875: ", atan_t(-0.875))
+print("atan 0.0625: ", atan_t(0.0625))
+print("atan -0.0625: ", atan_t(-0.0625))
+print("atan 0.03125: ", atan_t(0.03125))
+print("atan -0.03125: ", atan_t(-0.03125))
+print("atan 0.015625: ", atan_t(0.015625))
+print("atan -0.015625: ", atan_t(-0.015625))
+print("mayor a 1")
+print("atan 1.5: ", atan_t(1.5))
+print("atan 1.25: ", atan_t(1.25))
+print("atan 1.75: ", atan_t(1.75))
+print("atan 1.125: ", atan_t(1.125))
+print("atan 1.875: ", atan_t(1.875))
+print("atan 1.0625: ", atan_t(1.0625))
+print("atan 1.03125: ", atan_t(1.03125))
+print("atan 1.015625: ", atan_t(1.015625))
+print("atan 2: ", atan_t(2))
+print("atan 3: ", atan_t(3))
+print("atan 4: ", atan_t(4))
+print("atan 5: ", atan_t(5))
+print("atan 6: ", atan_t(6))
+print("atan 7: ", atan_t(7))
+print("menor a -1")
+print("atan -1.5: ", atan_t(-1.5))
+print("atan -1.25: ", atan_t(-1.25))
+print("atan -1.75: ", atan_t(-1.75))
+print("atan -1.125: ", atan_t(-1.125))
+print("atan -1.875: ", atan_t(-1.875))
+print("atan -1.0625: ", atan_t(-1.0625))
+print("atan -1.03125: ", atan_t(-1.03125))
+print("atan -1.015625: ", atan_t(-1.015625))
+print("atan -2: ", atan_t(-2))
+print("atan -3: ", atan_t(-3))
+print("atan -4: ", atan_t(-4))
+print("atan -5: ", atan_t(-5))
+print("atan -6: ", atan_t(-6))
+print("atan -7: ", atan_t(-7))
+
 
 print("")
 print("acos_t")
