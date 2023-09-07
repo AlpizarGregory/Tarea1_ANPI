@@ -13,6 +13,7 @@ def factorial_t(x):
     Entradas: x es el número máximo del factorial
     Salidas: x!
     Restricciones: x debe ser positivo
+    Uso: factorial_t(x)
     """
     temp = 1
     count = 0
@@ -28,8 +29,9 @@ def div_t(a):
     """
     Calcula la división de 1/a
     Entradas: a es el denominador de la fracción
-    Salidas: 1/a
+    Salidas: [1/a, Booleano de éxito, mensaje de error, iteraciones]
     Restricciones: a debe ser positivo
+    Uso: div_t(a) y utilice índices para acceder a los valores, [0] para el resultado, [1] para el booleano, [2] para el mensaje de error y [3] para la cantidad de iteraciones.
     """
     sign = 1
     if a < tol:
@@ -71,8 +73,9 @@ def exp_t(x):
     """
     Calcula el valor de e^x
     Entradas: x es el exponente de e
-    Salidas: e^x
+    Salidas: [e^x, Booleano de éxito, mensaje de error, iteraciones]
     Restricciones: x debe ser un número real
+    Uso: exp_t(x) y utilice índices '[#]' para acceder a los valores, [0] para el resultado, [1] para el booleano, [2] para el mensaje de error y [3] para la cantidad de iteraciones.
     """
     act = 0
     prev = 0
@@ -93,8 +96,9 @@ def sin_t(a):
     """
     Calcula el valor de sen(a)
     Entradas: a es el ángulo en radianes
-    Salidas: sen(a)
+    Salidas: [sen(a), Booleano de éxito, mensaje de error, iteraciones]
     Restricciones: a debe ser un número real
+    Uso: sin_t(a) y utilice índices '[#]' para acceder a los valores, [0] para el resultado, [1] para el booleano, [2] para el mensaje de error y [3] para la cantidad de iteraciones.
     """
     act = 0
     prev = 0
@@ -119,8 +123,9 @@ def cos_t(a):
     """
     Calcula el valor de cos(a)
     Entradas: a es el ángulo en radianes
-    Salidas: cos(a)
+    Salidas: [cos(a), Booleano de éxito, mensaje de error, iteraciones]
     Restricciones: a debe ser un número real
+    Uso: cos_t(a) y utilice índices '[#]' para acceder a los valores, [0] para el resultado, [1] para el booleano, [2] para el mensaje de error y [3] para la cantidad de iteraciones.
     """
     act = 0
     prev = 0
@@ -145,8 +150,10 @@ def tan_t(x):
     """
     Calcula el valor de tan(x)
     Entradas: x es el ángulo en radianes
-    Salidas: tan(x)
-    Restricciones: x debe ser un número real diferente de pi/2"""
+    Salidas: [tan(x), Booleano de éxito, mensaje de error, iteraciones]
+    Restricciones: x debe ser un número real diferente de pi/2
+    Uso: tan_t(x) y utilice índices '[#]' para acceder a los valores, [0] para el resultado, [1] para el booleano, [2] para el mensaje de error y [3] para la cantidad de iteraciones.
+    """
 
     while x > 2 * pi_t:
         x -= 2 * pi_t
@@ -170,8 +177,9 @@ def ln_t(a):
     """
     Calcula el valor de ln(a)
     Entradas: a es el número del logaritmo
-    Salidas: ln(a)
+    Salidas: [ln(a), Booleano de éxito, mensaje de error, iteraciones]
     Restricciones: a debe ser un número real positivo diferente de 1
+    Uso: ln_t(a) y utilice índices '[#]' para acceder a los valores, [0] para el resultado, [1] para el booleano, [2] para el mensaje de error y [3] para la cantidad de iteraciones.
     """
     iter = 0
     act = 0
@@ -199,8 +207,9 @@ def log_t(x, a):
     """
     Calcula el valor de log_a(x)
     Entradas: x es el número del logaritmo, a es la base del logaritmo
-    Salidas: log_a(x)
+    Salidas: [log_a(x), Booleano de éxito, mensaje de error, iteraciones]
     Restricciones: x y a deben ser números reales positivos diferentes de 1
+    Uso: log_t(x, a) y utilice índices '[#]' para acceder a los valores, [0] para el resultado, [1] para el booleano, [2] para el mensaje de error y [3] para la cantidad de iteraciones.
     """
     lnx = ln_t(x)
     if lnx[1] == False:
@@ -223,28 +232,77 @@ def power_t(x, y):
     Entradas: x es la base, y es el exponente
     Salidas: x^y
     Restricciones: tanto x como y deben ser números reales
+    Uso: power_t(x, y)
     """
     return x**y
 
 
 def sinh_t(x):
-    pass
+    """
+    Calcula el valor de sinh(x)
+    Entradas: x es el ángulo en radianes
+    Salidas: [sinh(x), Booleano de éxito, mensaje de error, iteraciones]
+    Restricciones: x debe ser un número real
+    Uso: sinh_t(x) y utilice índices '[#]' para acceder a los valores, [0] para el resultado, [1] para el booleano, [2] para el mensaje de error y [3] para la cantidad de iteraciones.
+    """
+    e1 = exp_t(x)
+    e2 = exp_t(-x)
+    if e1[1] == False:
+        return [0, False, e1[2], 0]
+    if e2[1] == False:
+        return [0, False, e2[2], 0]
+    
+    return [(e1[0] - e2[0]) * 0.5, True, "Success", 0]
 
 
 def cosh_t(x):
-    pass
+    """
+    Calcula el valor de cosh(x)
+    Entradas: x es el ángulo en radianes
+    Salidas: [cosh(x), Booleano de éxito, mensaje de error, iteraciones]
+    Restricciones: x debe ser un número real
+    Uso: cosh_t(x) y utilice índices '[#]' para acceder a los valores, [0] para el resultado, [1] para el booleano, [2] para el mensaje de error y [3] para la cantidad de iteraciones.
+    """
+    e1 = exp_t(x)
+    e2 = exp_t(-x)
+    if e1[1] == False:
+        return [0, False, e1[2], 0]
+    if e2[1] == False:
+        return [0, False, e2[2], 0]
+    
+    return [(e1[0] + e2[0]) * 0.5, True, "Success", 0]
 
 
 def tanh_t(x):
-    pass
+    """
+    Calcula el valor de tanh(x)
+    Entradas: x es el ángulo en radianes
+    Salidas: [tanh(x), Booleano de éxito, mensaje de error, iteraciones]
+    Restricciones: x debe ser un número real
+    Uso: tanh_t(x) y utilice índices '[#]' para acceder a los valores, [0] para el resultado, [1] para el booleano, [2] para el mensaje de error y [3] para la cantidad de iteraciones.
+    """
+    sinh = sinh_t(x)
+    if sinh[1] == False:
+        return [0, False, sinh[2], 0]
+    
+    cosh = cosh_t(x)
+    if cosh[1] == False:
+        return [0, False, cosh[2], 0]
+    
+    division = div_t(cosh[0])
+    if division[1] == False:
+        return [0, False, division[2], 0]
+    
+    return [sinh[0] * division[0], True, "Success", 0]
 
 
 def sqrt_t(x):
     """
     Calcula el valor de sqrt(x)
     Entradas: x es el radicando
-    Salidas: sqrt(x)
+    Salidas: [sqrt(x), Booleano de éxito, mensaje de error, iteraciones]
     Restricciones: x debe ser un número real positivo
+    Uso: sqrt_t(x) y utilice índices '[#]' para acceder a los valores, [0] para el resultado, [1] para el booleano, [2] para el mensaje de error y [3] para la cantidad de iteraciones.
     """
     return root_t(x, 2)
 
@@ -253,8 +311,9 @@ def root_t(x, y):
     """
     Calcula el valor de x^(1/y)
     Entradas: x es la base, y es el exponente
-    Salidas: x^(1/y)
+    Salidas: [x^(1/y), Booleano de éxito, mensaje de error, iteraciones]
     Restricciones: x debe ser un número real positivo, y debe ser un número real positivo diferente de 0
+    Uso: root_t(x, y) y utilice índices '[#]' para acceder a los valores, [0] para el resultado, [1] para el booleano, [2] para el mensaje de error y [3] para la cantidad de iteraciones.
     """
     if x < 0:
         return [-1, False, "Input must be positive", 0]
@@ -284,8 +343,9 @@ def asin_t(a):
     """
     Calcula el valor de asin(a)
     Entradas: a es el número del seno inverso
-    Salidas: asin(a)
+    Salidas: [asin(a), Booleano de éxito, mensaje de error, iteraciones]
     Restricciones: a debe ser un número real entre -1 y 1
+    Uso: asin_t(a) y utilice índices '[#]' para acceder a los valores, [0] para el resultado, [1] para el booleano, [2] para el mensaje de error y [3] para la cantidad de iteraciones.
     """
     act = 0
     prev = 0
@@ -316,8 +376,9 @@ def atan_t(a):
     """
     Calcula el valor de atan(a)
     Entradas: a es el número del tangente inverso
-    Salidas: atan(a)
+    Salidas: [atan(a), Booleano de éxito, mensaje de error, iteraciones]
     Restricciones: a debe ser un número real
+    Uso: atan_t(a) y utilice índices '[#]' para acceder a los valores, [0] para el resultado, [1] para el booleano, [2] para el mensaje de error y [3] para la cantidad de iteraciones.
     """
     act = 0
     prev = 0
@@ -380,22 +441,66 @@ def acos_t(x):
     """
     Calcula el valor de acos(x)
     Entradas: x es el número del coseno inverso
-    Salidas: acos(x)
+    Salidas: [acos(x), Booleano de éxito, mensaje de error, iteraciones]
     Restricciones: x debe ser un número real entre -1 y 1
+    Uso: acos_t(x) y utilice índices '[#]' para acceder a los valores, [0] para el resultado, [1] para el booleano, [2] para el mensaje de error y [3] para la cantidad de iteraciones.
     """
     return pi_t * 0.5 - asin_t(x)[0]
 
 
 def sec_t(x):
-    pass
-
+    """
+    Calcula el valor de sec(x)
+    Entradas: x es el ángulo en radianes
+    Salidas: [sec(x), Booleano de éxito, mensaje de error, iteraciones]
+    Restricciones: x debe ser un número real
+    Uso: sec_t(x) y utilice índices '[#]' para acceder a los valores, [0] para el resultado, [1] para el booleano, [2] para el mensaje de error y [3] para la cantidad de iteraciones.
+    """
+    cos = cos_t(x)
+    if cos[1] == False:
+        return [0, False, cos[2], 0]
+    
+    division = div_t(cos_t(x)[0])
+    if division[1] == False:
+        return [0, False, division[2], 0]
+    
+    return [division[0], True, "Success", 0]
 
 def cot_t(x):
-    pass
-
+    """
+    Calcula el valor de cot(x)
+    Entradas: x es el ángulo en radianes
+    Salidas: [cot(x), Booleano de éxito, mensaje de error, iteraciones]
+    Restricciones: x debe ser un número real
+    Uso: cot_t(x) y utilice índices '[#]' para acceder a los valores, [0] para el resultado, [1] para el booleano, [2] para el mensaje de error y [3] para la cantidad de iteraciones.
+    """
+    tan = tan_t(x)
+    if tan[1] == False:
+        return [0, False, tan[2], 0]
+    
+    division = div_t(tan_t(x)[0])
+    if division[1] == False:
+        return [0, False, division[2], 0]
+    
+    return [division[0], True, "Success", 0]
 
 def csc_t(x):
-    pass
+    """
+    Calcula el valor de csc(x)
+    Entradas: x es el ángulo en radianes
+    Salidas: [csc(x), Booleano de éxito, mensaje de error, iteraciones]
+    Restricciones: x debe ser un número real
+    Uso: csc_t(x) y utilice índices '[#]' para acceder a los valores, [0] para el resultado, [1] para el booleano, [2] para el mensaje de error y [3] para la cantidad de iteraciones.
+    """
+    sin = sin_t(x)
+    if sin[1] == False:
+        return [0, False, sin[2], 0]
+    
+    division = div_t(sin_t(x)[0])
+    if division[1] == False:
+        return [0, False, division[2], 0]
+    
+    return [division[0], True, "Success", 0]
 
 
 # pruebas
@@ -477,13 +582,27 @@ print("2^6: ", power_t(2, 6))
 
 print("")
 print("sinh_t")
-
+print("sinh 0: ", sinh_t(0))
+print("sinh 1: ", sinh_t(1))
+print("sinh 2: ", sinh_t(2))
+print("sinh 3: ", sinh_t(3))
+print("sinh 4: ", sinh_t(4))
 
 print("")
 print("cosh_t")
+print("cosh 0: ", cosh_t(0))
+print("cosh 1: ", cosh_t(1))
+print("cosh 2: ", cosh_t(2))
+print("cosh 3: ", cosh_t(3))
+print("cosh 4: ", cosh_t(4))
 
 print("")
 print("tanh_t")
+print("tanh 0: ", tanh_t(0))
+print("tanh 1: ", tanh_t(1))
+print("tanh 2: ", tanh_t(2))
+print("tanh 3: ", tanh_t(3))
+print("tanh 4: ", tanh_t(4))
 
 print("")
 print("sqrt_t")
@@ -586,9 +705,20 @@ print("acos 0.015625: ", acos_t(0.015625))
 
 print("")
 print("sec_t")
+print("sec 0: ", sec_t(0))
+print("sec pi: ", sec_t(pi_t))
+print("sec pi/2: ", sec_t(pi_t / 2))
+print("sec pi/4: ", sec_t(pi_t / 4))
 
 print("")
 print("cot_t")
+print("cot 0: ", cot_t(0))
+print("cot pi: ", cot_t(pi_t))
+print("cot pi/2: ", cot_t(pi_t / 2))
 
 print("")
 print("csc_t")
+print("csc 0: ", csc_t(0))
+print("csc pi: ", csc_t(pi_t))
+print("csc pi/2: ", csc_t(pi_t / 2))
+print("csc pi/4: ", csc_t(pi_t / 4))
