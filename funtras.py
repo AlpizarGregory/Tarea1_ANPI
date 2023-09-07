@@ -31,12 +31,14 @@ def div_t(a):
     Salidas: 1/a
     Restricciones: a debe ser positivo
     """
+    sign = 1
     if a < tol:
-        return [-1, False, "Division by zero: input is zero", 0]
+        return [-1, False, "Division by zero: input close to zero", 0]
     elif a == 1:
         return [1, True, "Success"]
     elif a < 0:
-        return [-1, False, "Input must be positive", 0]
+        a = -a
+        sign = -1
 
     prev = 0
     if factorial_t(0) < a and a < factorial_t(20):
@@ -50,7 +52,7 @@ def div_t(a):
     elif factorial_t(80) <= a < factorial_t(100):
         prev = power_t(eps, 15)
     else:
-        return [0, False, "Infinity output: overflow", 0]
+        return [0, False, "Zero output: input overflow", 0]
 
     iter = 0
     act = 0
@@ -62,7 +64,7 @@ def div_t(a):
             break
         prev = act
 
-    return [act, True, "Success", iter]
+    return [sign * act, True, "Success", iter]
 
 
 def exp_t(x):
@@ -76,12 +78,15 @@ def exp_t(x):
     prev = 0
 
     for n in range(iterMax):
-        act += power_t(x, n) * div_t(factorial_t(n))[0]
+        division = div_t(factorial_t(n))
+        if division[1] == False:
+            return [act, False, division[2], n]
+        act += power_t(x, n) * division[0]
         if abs(act - prev) < tol:
             return [act, True, "Success", n]
         prev = act
     else:
-        return [act, True, "Iteration limit reached", iterMax]
+        return [act, False, "Iteration limit reached", iterMax]
 
 
 def sin_t(a):
@@ -98,13 +103,16 @@ def sin_t(a):
         a -= 2 * pi_t
 
     for n in range(iterMax):
-        act += power_t(-1, n) * power_t(a, 2 * n + 1) * div_t(factorial_t(2 * n + 1))[0]
+        division = div_t(factorial_t(2 * n + 1))
+        if division[1] == False:
+            return [act, False, division[2], n]
+        act += power_t(-1, n) * power_t(a, 2 * n + 1) * division[0]
 
         if abs(act - prev) < tol:
             return [act, True, "Success", n]
         prev = act
     else:
-        return [act, True, "Iteration limit reached", iterMax]
+        return [act, False, "Iteration limit reached", iterMax]
 
 
 def cos_t(a):
@@ -121,13 +129,16 @@ def cos_t(a):
         a -= 2 * pi_t
 
     for n in range(iterMax):
-        act += power_t(-1, n) * power_t(a, 2 * n) * div_t(factorial_t(2 * n))[0]
+        division = div_t(factorial_t(2 * n))
+        if division[1] == False:
+            return [act, False, division[2], n]
+        act += power_t(-1, n) * power_t(a, 2 * n) * division[0]
 
         if abs(act - prev) < tol:
             return [act, True, "Success", n]
         prev = act
     else:
-        return [act, True, "Iteration limit reached", iterMax]
+        return [act, False, "Iteration limit reached", iterMax]
 
 
 def tan_t(x):
@@ -139,12 +150,20 @@ def tan_t(x):
 
     while x > 2 * pi_t:
         x -= 2 * pi_t
-    
-    if x == pi_t * 0.5:
-        return [-1, False, "Division by zero", 0]
-    else:
-        return [sin_t(x)[0] * div_t(cos_t(x)[0])[0], True, "Success", 0]
 
+    cos = cos_t(x)
+    if cos[1] == False:
+        return [0, False, cos[2], 0]
+
+    division = div_t(cos[0])
+    if division[1] == False:
+        return [0, False, division[2], 0]
+    
+    sin = sin_t(x)
+    if sin[1] == False:
+        return [0, False, sin[2], 0]
+    
+    return [sin[0] * division[0], True, "Success", 0]
 
 def ln_t(a):
     """
@@ -159,9 +178,19 @@ def ln_t(a):
 
     while abs(act - prev) < tol and iter < iterMax:
         prev = act
-        act += div_t(2 * iter + 1)[0] * power_t((a - 1) * div_t(a + 1)[0], 2 * iter)
+        division1 = div_t(2 * iter + 1)
+        if division1[1] == False:
+            return [act, False, division1[2], iter]
+        
+        division2 = div_t(a + 1)
+        if division2[1] == False:
+            return [act, False, division2[2], iter]
+        act += division1[0] * power_t((a - 1) * division2[0], 2 * iter)
         iter += 1
 
+    division3 = div_t(a + 1)
+    if division3[1] == False:
+        return [act, False, division3[2], iter]
     return [2 * (a - 1) * div_t(a + 1)[0] * act, True, "Success", iter]
 
 
@@ -231,7 +260,7 @@ def root_t(x, y):
             return [act, True, "Success", n]
         prev = act
     else:
-        return [act, True, "Iteration limit reached", iterMax]
+        return [act, False, "Iteration limit reached", iterMax]
 
 
 def asin_t(a):
@@ -253,9 +282,12 @@ def asin_t(a):
         return [-pi_t / 2, True, "Success", 0]
 
     for n in range(iterMax):
+        division = div_t(power_t(4, n) * power_t(factorial_t(n), 2) * (2 * n + 1))
+        if division[1] == False:
+            return [act, False, division[2], n]
         act += (
             factorial_t(2 * n)
-            * div_t(power_t(4, n) * power_t(factorial_t(n), 2) * (2 * n + 1))[0]
+            * division[0]
             * power_t(a, 2 * n + 1)
         )
 
@@ -263,7 +295,7 @@ def asin_t(a):
             return [act, True, "Success", n]
         prev = act
     else:
-        return [act, True, "Iteration limit reached", iterMax]
+        return [act, False, "Iteration limit reached", iterMax]
 
 
 def atan_t(a):
@@ -283,35 +315,51 @@ def atan_t(a):
 
     if a > -1 and a < 1:
         for n in range(iterMax):
-            act += power_t(-1, n) * power_t(a, 2 * n + 1) * div_t(2 * n + 1)[0]
+            division = div_t(2 * n + 1)
+            if division[1] == False:
+                return [act, False, division[2], n]
+            act += power_t(-1, n) * power_t(a, 2 * n + 1) * division[0]
 
             if abs(act - prev) < tol:
                 return [act, True, "Success", n]
             prev = act
         else:
-            return [act, True, "Iteration limit reached", iterMax]
+            return [act, False, "Iteration limit reached", iterMax]
 
     else:
+        isNegative = False
+        if a < -1:
+            a = -a
+            isNegative = True
+
         for n in range(iterMax):
-            if n > 500:
-                return [act, False, "Test iteration reached", n]
-            #print("iter: ", n)
-            #print("value: ", act)
-            act += power_t(-1, n) * div_t((2*n+1)*power_t(a, 2*n+1))[0]
+            division = div_t((2 * n + 1) * power_t(a, 2 * n + 1))
+
+            if division[1] == False:
+
+                if a > 1:
+                    return [pi_t * 0.5 - act, False, division[2], n]
+                
+                else:
+                    return [-pi_t * 0.5 - act, False, division[2], n]
+                
+            act += power_t(-1, n) * division[0]
 
             if abs(act - prev) < tol:
+
                 if a > 1:
                     return [pi_t * 0.5 - act, True, "Success", n]
+                
                 else:
                     return [-pi_t * 0.5 - act, True, "Success", n]
             prev = act
-        
-        else:
-            if a > 1:
-                return [pi_t * 0.5 - act, True, "Iteration limit reached", iterMax]
-            else:
-                return [-pi_t * 0.5 - act, True, "Iteration limit reached", iterMax]
 
+        else:
+            if isNegative:
+                return [-pi_t * 0.5 - act, False, "Iteration limit reached", iterMax]
+            
+            else:
+                return [pi_t * 0.5 - act, False, "Iteration limit reached", iterMax]
 
 
 def acos_t(x):
