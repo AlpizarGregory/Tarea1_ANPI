@@ -23,6 +23,7 @@ def factorial_t(x):
 
     return temp
 
+
 def div_t(a):
     """
     Calcula la división de 1/a
@@ -31,25 +32,25 @@ def div_t(a):
     Restricciones: a debe ser positivo
     """
     if a == 0:
-        return "Division by zero"
+        return [-1, False, "Division by zero: input", 0]
     elif a == 1:
-        return 1
+        return [1, True, "Success"]
     elif a < 0:
-        return "Input must be positive"
+        return [-1, False, "Input must be positive", 0]
 
     prev = 0
     if factorial_t(0) < a and a < factorial_t(20):
         prev = power_t(eps, 2)
-    elif factorial_t(20) < a < factorial_t(40):
+    elif factorial_t(20)-1 < a < factorial_t(40):
         prev = power_t(eps, 4)
-    elif factorial_t(40) < a < factorial_t(60):
+    elif factorial_t(40)-1 < a < factorial_t(60):
         prev = power_t(eps, 8)
-    elif factorial_t(60) < a < factorial_t(80):
+    elif factorial_t(60)-1 < a < factorial_t(80):
         prev = power_t(eps, 11)
-    elif factorial_t(80) < a < factorial_t(100):
+    elif factorial_t(80)-1 < a < factorial_t(100):
         prev = power_t(eps, 15)
     else:
-        return "Division by zero"
+        return [-1, False, "Division by zero: overflow", 0]
 
     iter = 0
     act = 0
@@ -60,8 +61,9 @@ def div_t(a):
         if abs(act - prev) < tol * abs(act) or iter > iterMax:
             break
         prev = act
-    
-    return act
+
+    return [act, True, "Success", iter]
+
 
 def exp_t(x):
     """
@@ -70,18 +72,18 @@ def exp_t(x):
     Salidas: e^x
     Restricciones: x debe ser un número real
     """
-    iter = 0
     act = 0
     prev = 0
-    while abs(act - prev) < tol and iter < iterMax:
+
+    for n in range(iterMax):
+        act += power_t(x, n) * div_t(factorial_t(n))[0]
+        if abs(act - prev) < tol:
+            return [act, True, "Success", n]
         prev = act
-        act += power_t(x, iter) * div_t(factorial_t(iter))
-        iter += 1
+    else:
+        return [act, True, "Iteration limit reached", iterMax]
 
-    return act
 
-# Entradas: a es el ángulo en radianes
-# Salidas: sen(a)
 def sin_t(a):
     """
     Calcula el valor de sen(a)
@@ -89,20 +91,20 @@ def sin_t(a):
     Salidas: sen(a)
     Restricciones: a debe ser un número real
     """
-    iter = 0
     act = 0
     prev = 0
 
-    while abs(act - prev) < tol and iter < iterMax:
-        prev = act
-        act += (
-            power_t(-1, iter)
-            * power_t(a, 2 * iter + 1)
-            * div_t(factorial_t(2 * iter + 1))
-        )
-        iter += 1
+    while a > 2 * pi_t:
+        a -= 2 * pi_t
 
-    return act
+    for n in range(iterMax):
+        act += power_t(-1, n) * power_t(a, 2 * n + 1) * div_t(factorial_t(2 * n + 1))[0]
+
+        if abs(act - prev) < tol:
+            return [act, True, "Success", n]
+        prev = act
+    else:
+        return [act, True, "Iteration limit reached", iterMax]
 
 
 def cos_t(a):
@@ -112,16 +114,20 @@ def cos_t(a):
     Salidas: cos(a)
     Restricciones: a debe ser un número real
     """
-    iter = 0
     act = 0
     prev = 0
 
-    while abs(act - prev) < tol and iter < iterMax:
-        prev = act
-        act += power_t(-1, iter) * power_t(a, 2 * iter) * div_t(factorial_t(2 * iter))
-        iter += 1
+    while a > 2 * pi_t:
+        a -= 2 * pi_t
 
-    return act
+    for n in range(iterMax):
+        act += power_t(-1, n) * power_t(a, 2 * n) * div_t(factorial_t(2 * n))[0]
+
+        if abs(act - prev) < tol:
+            return [act, True, "Success", n]
+        prev = act
+    else:
+        return [act, True, "Iteration limit reached", iterMax]
 
 
 def tan_t(x):
@@ -133,7 +139,7 @@ def tan_t(x):
     if cos_t(x) == 0:
         return "Division by zero"
     else:
-        return sin_t(x) * div_t(cos_t(x))
+        return sin_t(x)[0] * div_t(cos_t(x))[0]
 
 
 def ln_t(a):
@@ -173,7 +179,6 @@ def power_t(x, y):
     Restricciones: x debe ser un número real, y debe ser un número real
     """
     return x**y
-
 
 def sinh_t(x):
     pass
