@@ -39,7 +39,7 @@ def div_t(a):
         sign = -1
         
     elif a < tol:
-        return [-1, False, "Division by zero: input close to zero", 0]
+        return [-1, False, "Division by zero", 0]
     elif a == 1:
         return [1, True, "Success"]
 
@@ -57,7 +57,7 @@ def div_t(a):
     elif factorial_t(80) <= a < factorial_t(100):
         prev = power_t(eps, 15)
     else:
-        return [0, False, "Infinite division: input overflow", 0]
+        return [0, False, "Division by infinite: overflow", 0]
 
     iter = 0
     act = 0
