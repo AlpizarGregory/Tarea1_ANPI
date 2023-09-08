@@ -34,16 +34,19 @@ def div_t(a):
     Uso: div_t(a) y utilice índices para acceder a los valores, [0] para el resultado, [1] para el booleano, [2] para el mensaje de error y [3] para la cantidad de iteraciones.
     """
     sign = 1
-    if a < tol:
+    if a < 0:
+        a = -a
+        sign = -1
+        
+    elif a < tol:
         return [-1, False, "Division by zero: input close to zero", 0]
     elif a == 1:
         return [1, True, "Success"]
-    elif a < 0:
-        a = -a
-        sign = -1
 
     prev = 0
-    if factorial_t(0) < a and a < factorial_t(20):
+    if a < factorial_t(0):
+        prev = eps
+    elif factorial_t(0) < a and a < factorial_t(20):
         prev = power_t(eps, 2)
     elif factorial_t(20) <= a < factorial_t(40):
         prev = power_t(eps, 4)
@@ -54,7 +57,7 @@ def div_t(a):
     elif factorial_t(80) <= a < factorial_t(100):
         prev = power_t(eps, 15)
     else:
-        return [0, False, "Zero output: input overflow", 0]
+        return [0, False, "Infinite division: input overflow", 0]
 
     iter = 0
     act = 0
@@ -158,6 +161,10 @@ def tan_t(x):
     while x > 2 * pi_t:
         x -= 2 * pi_t
 
+    sin = sin_t(x)
+    if sin[1] == False:
+        return [0, False, sin[2], 0]
+
     cos = cos_t(x)
     if cos[1] == False:
         return [0, False, cos[2], 0]
@@ -165,10 +172,6 @@ def tan_t(x):
     division = div_t(cos[0])
     if division[1] == False:
         return [0, False, division[2], 0]
-
-    sin = sin_t(x)
-    if sin[1] == False:
-        return [0, False, sin[2], 0]
 
     return [sin[0] * division[0], True, "Success", 0]
 
@@ -304,6 +307,8 @@ def sqrt_t(x):
     Restricciones: x debe ser un número real positivo
     Uso: sqrt_t(x) y utilice índices '[#]' para acceder a los valores, [0] para el resultado, [1] para el booleano, [2] para el mensaje de error y [3] para la cantidad de iteraciones.
     """
+    if x < tol:
+        return [-1, False, "Invalid input: Square root of zero", 0]
     return root_t(x, 2)
 
 
@@ -315,10 +320,10 @@ def root_t(x, y):
     Restricciones: x debe ser un número real positivo, y debe ser un número real positivo diferente de 0
     Uso: root_t(x, y) y utilice índices '[#]' para acceder a los valores, [0] para el resultado, [1] para el booleano, [2] para el mensaje de error y [3] para la cantidad de iteraciones.
     """
-    if x < 0:
-        return [-1, False, "Input must be positive", 0]
-    elif y == 0:
-        return [-1, False, "Division by zero", 0]
+    if x < tol:
+        return [-1, False, "Invalid input: Root of zero", 0]
+    elif y < 0:
+        return [-1, False, "Invalid input: 0th root", 0]
     elif y == 1:
         return [x, True, "Success", 0]
 
@@ -510,8 +515,8 @@ print("factorial_t")
 print("0!: ", factorial_t(0))
 print("1!: ", factorial_t(1))
 print("2!: ", factorial_t(2))
-print("33!: ", factorial_t(3))
-print("42!: ", factorial_t(4))
+print("33!: ", factorial_t(33))
+print("42!: ", factorial_t(42))
 
 print("")
 print("div_t")
