@@ -44,9 +44,7 @@ def div_t(a):
         return [1, True, "Success"]
 
     prev = 0
-    if a < factorial_t(0):
-        prev = eps
-    elif factorial_t(0) < a and a < factorial_t(20):
+    if 0 < a and a < factorial_t(20):
         prev = power_t(eps, 2)
     elif factorial_t(20) <= a < factorial_t(40):
         prev = power_t(eps, 4)
