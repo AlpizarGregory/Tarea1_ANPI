@@ -1,3 +1,4 @@
+import funtras
 from tkinter import *
 from tkinter import messagebox
 from tkinter import font
@@ -48,6 +49,8 @@ u  = 6
 o = 143
 buttonsColor = '#3B404F'
 
+negButtons = ['#333845', '#ADADAD']
+
 optL = Label(MainWindow, text = "≡", font=("Arial", 18), bg="#212630", fg="white")
 optL.place(x=12, y=5)
 nameL = Label(MainWindow, text = "Basic Calculator", font=("Arial", 14), bg="#212630", fg="white")
@@ -97,8 +100,9 @@ def on_entry_leave2(event):
     selectedY = False
 
 def on_validate_input(P):
+    
     if P == "" or P.replace(".", "", 1).isdigit():
-        return True
+        return True    
     elif P == "X" or P== "Y":
         return True
     else:
@@ -120,18 +124,40 @@ def set_entry_text(op):
         #yE.insert(0, "Y")
         xE.config(fg='white')
         yE.config(fg='white')
+    elif op == 4:
+        resultE.delete(0, END) 
+        resultE.insert(END, "0")      
 
+nX = False
+nY = False
+def negative(entry):
+    global nX
+    global nY
+    global negButtons
+    if entry == 1:
+        nX = not nX
+        if nX:
+            negxB.config(bg="#4CC2FF",fg="#212630")
+        else:
+            negxB.config(bg="#333845",fg="#ADADAD")
+    elif entry == 2:
+        nY = not nY
+        if nY:
+            negyB.config(bg="#4CC2FF",fg="#212630")
+        else:
+            negyB.config(bg="#333845",fg="#ADADAD")
+    
 
 validate_input = MainWindow.register(on_validate_input)
 
-xE=Entry(MainWindow,width=20,borderwidth=0, insertbackground='#ADADAD', font=("Arial", 14),bg="#333845",fg="#ADADAD", justify=CENTER, validate="key", validatecommand=(validate_input, "%P"))
-xE.place(x=7,y=35) #
+xE=Entry(MainWindow,width=18,borderwidth=0, insertbackground='#ADADAD', font=("Arial", 14),bg="#333845",fg="#ADADAD", justify=CENTER, validate="key", validatecommand=(validate_input, "%P"))
+xE.place(x=29,y=35) #
 xE.insert(0, "X")
 xE.bind("<FocusIn>", on_entry_click)
 xE.bind("<FocusOut>", on_entry_leave)
 
-yE=Entry(MainWindow,width=8,borderwidth=0, insertbackground='#ADADAD', font=("Arial", 14),bg="#333845",fg="#ADADAD", justify=CENTER, validate="key", validatecommand=(validate_input, "%P"))
-yE.place(x=233,y=35)
+yE=Entry(MainWindow,width=6,borderwidth=0, insertbackground='#ADADAD', font=("Arial", 14),bg="#333845",fg="#ADADAD", justify=CENTER, validate="key", validatecommand=(validate_input, "%P"))
+yE.place(x=254,y=35)
 yE.insert(0, "Y")
 yE.bind("<FocusIn>", on_entry_click2)
 yE.bind("<FocusOut>", on_entry_leave2)
@@ -142,14 +168,25 @@ yE.bind("<FocusOut>", on_entry_leave2)
 #yL.place(x=157, y=35)
 
 clearxB = Button(MainWindow, command=lambda: set_entry_text(1), borderwidth = 0, text = "CX", font=("Arial", 11), bg="#212630", fg="white")
-clearxB.place(x=50, y=113)
+clearxB.place(x=30, y=113)
 clearyB = Button(MainWindow, command=lambda: set_entry_text(2), borderwidth = 0, text = "CY", font=("Arial", 11), bg="#212630", fg="white")
-clearyB.place(x=150, y=113)
+clearyB.place(x=110, y=113)
 clearallB = Button(MainWindow, command=lambda: set_entry_text(3), borderwidth = 0, text = "C", font=("Arial", 11), bg="#212630", fg="white")
-clearallB.place(x=250, y=113)
+clearallB.place(x=190, y=113)
+clearrB = Button(MainWindow, command=lambda: set_entry_text(4), borderwidth = 0, text = "CR", font=("Arial", 11), bg="#212630", fg="white")
+clearrB.place(x=270, y=113)
 
-resultL = Label(MainWindow, width=12, text = "0", font=bold_font, bg="#212630", fg="white", anchor="e")
-resultL.place(x=15, y=60)
+
+negxB = Button(MainWindow, command=lambda: negative(1), borderwidth = 0, text = " - ", font=("Arial", 10), bg=negButtons[0], fg=negButtons[1])
+negxB.place(x=7, y=35)
+negyB = Button(MainWindow, command=lambda: negative(2), borderwidth = 0, text = " - ", font=("Arial", 10), bg=negButtons[0], fg=negButtons[1])
+negyB.place(x=232, y=35)
+
+
+
+resultE = Entry(MainWindow, borderwidth= 0,width=13, font=bold_font, bg="#212630", fg="white", justify=RIGHT)
+resultE.insert(END,"0")
+resultE.place(x=18, y=60)
 
 
 def instructions():
@@ -158,7 +195,7 @@ def instructions():
     helpWindow.title("Guide")
     helpWindow.geometry(f"+{x-278}+{y}")
     # Add content to the secondary window
-    label = Label(helpWindow, bg="#212630", fg="white", anchor="w", font= ("Arial", 10) , text="1. Para utilizar la calculadora escriba en los \nespacios de X o Y según corresponda. Puede \n utilizar el teclado de su computadora o el\n de la misma calculadora. \n2. Luego proceda a seleccionar una de las\n funciones disponibles, observe que la\n mayoría de funciones utilizan unicamente X. \n\nNota: Los botones CX, CY y C permiten\n borrar los datos de entrada X, Y y ambos,\n respectivamente. ")
+    label = Label(helpWindow, bg="#212630", fg="white", anchor="w", font= ("Arial", 10) , text="1. Para utilizar la calculadora escriba en los \nespacios de X o Y según corresponda. Puede \n utilizar el teclado de su computadora o el\n de la misma calculadora. \n2. Luego proceda a seleccionar una de las\n funciones disponibles, observe que la\n mayoría de funciones utilizan unicamente X. \n\nCX: borra la entrada X. \nCY: borra la entrada Y. \nC: borra ambas entradas X y Y. \nCR: borra el resultado.")
     label.pack(padx=0, pady=0)
     # Run the secondary window's main loop
     helpWindow.iconbitmap('C:\\Users\\Bryan Gómez\\Pictures\\calcico.ico')
@@ -213,71 +250,216 @@ for i in range(total_rows):
     u = 6    
     o+=33
 
-senhB = Button(matrixE[0][0], width=12, borderwidth=0,text="senh (x)", font=("Arial", 10), bg="#3B404F", fg="white")
+
+def calcular(op):
+    resultE.delete(0, END)
+    result = ""
+    signo = 1
+    signoY = 1
+    if nX:
+        signo = -1
+    if nY:
+        signoY = -1
+    print(signo,signoY)    
+        
+    if not xE.get() or (xE.get() == "X"):
+        print("Vacio")   
+    elif (op == "senh (x)"):
+        result = funtras.sinh_t(signo*float(xE.get()))
+    elif (op == "cosh (x)"):
+        result = funtras.cosh_t(signo*float(xE.get()))
+    elif (op == "tanh (x)"):
+        result = funtras.tanh_t(signo*float(xE.get()))
+        
+    elif (op == "asen (x)"):
+        if (signo*float(xE.get()) > 1.0) or (signo*float(xE.get()) < 1.0):
+            resultE.insert(0, "X fuera del dominio de asen [-1,1]")
+            return 0
+        result = funtras.asin_t(signo*float(xE.get()))
+    elif (op == "acos (x)"):
+        if (signo*float(xE.get()) > 1.0) or (signo*float(xE.get()) < 1.0):
+            resultE.insert(0, "X fuera del dominio de acos [-1,1]")
+            return 0
+        result = funtras.acos_t(signo*float(xE.get()))
+    elif (op == "atan (x)"):
+        result = funtras.atan_t(signo*float(xE.get()))
+        
+    elif (op == "sec (x)"):
+        cos0 = funtras.cos_t(signo*float(xE.get()))
+        if (cos0[0]==0.0):
+            resultE.insert(0, "X fuera del dominio de sec, cos(x) es 0")
+            return 0
+        result = funtras.sec_t(signo*float(xE.get()))
+    elif (op == "csc (x)"):
+        sin0 = funtras.sin_t(signo*float(xE.get()))
+        if (sin0[0]==0.0):
+            resultE.insert(0, "X fuera del dominio de csc, sen(x) es 0")
+            return 0
+        result = funtras.csc_t(signo*float(xE.get()))
+    elif (op == "cot (x)"):
+        sin0 = funtras.sin_t(signo*float(xE.get()))
+        if (sin0[0]==0.0):
+            resultE.insert(0, "X fuera del dominio de cot, sen(x) es 0")
+            return 0
+        result = funtras.cot_t(signo*float(xE.get()))
+        
+    elif (op == "sen (x)"):
+        result = funtras.sin_t(signo*float(xE.get()))
+    elif (op == "cos (x)"):
+        result = funtras.cos_t(signo*float(xE.get()))
+    elif (op == "tan (x)"):
+        cos0 = funtras.cos_t(signo*float(xE.get()))
+        if (cos0[0]==0.0):
+            resultE.insert(0, "X fuera del dominio de tan, cos(x) es 0")
+            return 0
+        result = funtras.tan_t(signo*float(xE.get()))
+        
+    elif (op == "ln (x)"):
+        if (signo*float(xE.get()) == 0.0):
+            resultE.insert(0, "X = 0, resultado indefinido")
+            return 0
+        elif nX:
+            resultE.insert(0, "X < 0, la calculadora no emplea números imaginarios")
+            return 0
+        result = funtras.ln_t(signo*float(xE.get()))
+    elif (op == "log10 (x)"):
+        if (signo*float(xE.get()) == 0.0):
+            resultE.insert(0, "X = 0, resultado indefinido")
+            return 0
+        elif nX:
+            resultE.insert(0, "X < 0, fuera de dominio de log ]0,∞]")
+            return 0
+        result = funtras.log_t(signo*float(xE.get()),10)
+    elif (op == "logy (x)"):
+        if not yE.get() or (yE.get() == "Y"):
+            print("Vacio")
+        elif (signo*float(xE.get()) == 0.0):
+            resultE.insert(0, "X = 0, resultado indefinido")
+            return 0
+        elif nX:
+            resultE.insert(0, "X < 0, fuera de dominio de log ]0,∞]")
+            return 0
+        elif (signoY*float(yE.get()) <= 1.0):
+            resultE.insert(0, "Y < 0, base de log fuera de dominio ]1,∞]")
+            return 0
+        else:
+            result = funtras.log_t(signo*float(xE.get()),signoY*float(yE.get()))
+        
+    elif (op == "1 / x"):
+        if (signo*float(xE.get()) == 0.0):
+            resultE.insert(0, "X = 0, división entre 0 no válida")
+            return 0
+        result = funtras.div_t(signo*float(xE.get()))
+    elif (op == "√ x"):
+        if nX:
+            resultE.insert(0, "X < 0, la calculadora no emplea números imaginarios")
+            return 0
+        result = funtras.sqrt_t(signo*float(xE.get()))
+    elif (op == "y√ x"):
+        if not yE.get() or (yE.get() == "Y"):
+            print("Vacio") 
+        else:
+            if nX:
+                resultE.insert(0, "X < 0, la calculadora no emplea números imaginarios")
+                return 0
+            result = funtras.root_t(signo*float(xE.get()),signoY*float(yE.get()))
+
+    elif (op == "e**x"):
+        result = funtras.exp_t(signo*float(xE.get()))
+    elif (op == "x ^ y"):
+        if not yE.get() or (yE.get() == "Y"):
+            print("Vacio") 
+        else:
+            if (signo*float(xE.get()) == 0.0) and (signoY*float(yE.get()) == 0.0):
+                resultE.insert(0, "X = Y = 0, forma indeterminada de potencia")
+                return 0
+            result = funtras.power_t(signo*float(xE.get()),signoY*float(yE.get()))
+            result = [result, True]
+    elif (op == "x !"):
+        if '.' in xE.get() or (signo*float(xE.get()) < 0.0):
+            resultE.insert(0, "X fuera del dominio factorial (Naturales)")
+            return 0
+        result = funtras.factorial_t(float(xE.get()))
+        result = [result, True]
+
+    if result[1] and xE.get():
+        resultE.insert(0, str(result[0]))
+    
+
+
+senhB = Button(matrixE[0][0], width=12, borderwidth=0,text="senh (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("senh (x)"))
 senhB.place(x=2, y=3)
 
-coshB = Button(matrixE[0][1], width=12, borderwidth=0,text="cosh (x)", font=("Arial", 10), bg="#3B404F", fg="white")
+coshB = Button(matrixE[0][1], width=12, borderwidth=0,text="cosh (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("cosh (x)"))
 coshB.place(x=2, y=3)
 
-tanhB = Button(matrixE[0][2], width=12, borderwidth=0,text="tanh (x)", font=("Arial", 10), bg="#3B404F", fg="white")
+tanhB = Button(matrixE[0][2], width=12, borderwidth=0,text="tanh (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("tanh (x)"))
 tanhB.place(x=2, y=3)
 
-asenB = Button(matrixE[1][0], width=12, borderwidth=0,text="asen (x)", font=("Arial", 10), bg="#3B404F", fg="white")
+
+asenB = Button(matrixE[1][0], width=12, borderwidth=0,text="asen (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("asen (x)"))
 asenB.place(x=2, y=3)
 
-acosB = Button(matrixE[1][1], width=12, borderwidth=0,text="acos (x)", font=("Arial", 10), bg="#3B404F", fg="white")
+acosB = Button(matrixE[1][1], width=12, borderwidth=0,text="acos (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("acos (x)"))
 acosB.place(x=2, y=3)
 
-atanB = Button(matrixE[1][2], width=12, borderwidth=0,text="atan (x)", font=("Arial", 10), bg="#3B404F", fg="white")
+atanB = Button(matrixE[1][2], width=12, borderwidth=0,text="atan (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("atan (x)"))
 atanB.place(x=2, y=3)
 
-secB = Button(matrixE[2][0], width=12, borderwidth=0,text="sec (x)", font=("Arial", 10), bg="#3B404F", fg="white")
+
+secB = Button(matrixE[2][0], width=12, borderwidth=0,text="sec (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("sec (x)"))
 secB.place(x=2, y=3)
 
-cscB = Button(matrixE[2][1], width=12, borderwidth=0,text="csc (x)", font=("Arial", 10), bg="#3B404F", fg="white")
+cscB = Button(matrixE[2][1], width=12, borderwidth=0,text="csc (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("csc (x)"))
 cscB.place(x=2, y=3)
 
-cotB = Button(matrixE[2][2], width=12, borderwidth=0,text="cot (x)", font=("Arial", 10), bg="#3B404F", fg="white")
+cotB = Button(matrixE[2][2], width=12, borderwidth=0,text="cot (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("cot (x)"))
 cotB.place(x=2, y=3)
 
-senB = Button(matrixE[3][0], width=12, borderwidth=0,text="sen (x)", font=("Arial", 10), bg="#3B404F", fg="white")
+
+senB = Button(matrixE[3][0], width=12, borderwidth=0,text="sen (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("sen (x)"))
 senB.place(x=2, y=3)
 
-cosB = Button(matrixE[3][1], width=12, borderwidth=0,text="cos (x)", font=("Arial", 10), bg="#3B404F", fg="white")
+cosB = Button(matrixE[3][1], width=12, borderwidth=0,text="cos (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("cos (x)"))
 cosB.place(x=2, y=3)
 
-tanB = Button(matrixE[3][2], width=12, borderwidth=0,text="tan (x)", font=("Arial", 10), bg="#3B404F", fg="white")
+tanB = Button(matrixE[3][2], width=12, borderwidth=0,text="tan (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("tan (x)"))
 tanB.place(x=2, y=3)
 
-lnB = Button(matrixE[4][0], width=12, borderwidth=0,text="ln (x)", font=("Arial", 10), bg="#3B404F", fg="white")
+
+lnB = Button(matrixE[4][0], width=12, borderwidth=0,text="ln (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("ln (x)"))
 lnB.place(x=2, y=3)
 
-log10B = Button(matrixE[4][1], width=12, borderwidth=0,text="log10 (x)", font=("Arial", 10), bg="#3B404F", fg="white")
+log10B = Button(matrixE[4][1], width=12, borderwidth=0,text="log10 (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("log10 (x)"))
 log10B.place(x=2, y=3)
 
-logyB = Button(matrixE[4][2], width=12, borderwidth=0,text="log  (x)", font=("Arial", 10), bg="#3B404F", fg="white")
+logyB = Button(matrixE[4][2], width=12, borderwidth=0,text="log  (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("logy (x)"))
 logyB.place(x=2, y=3)
 logyL = Label(MainWindow, text = "y", font=("Arial", 6), bg="#3B404F", fg="white")
 logyL.place(x=269, y=288)
 
-divB = Button(matrixE[5][0], width=12, borderwidth=0,text="1 / x", font=("Arial", 10), bg="#3B404F", fg="white")
+
+divB = Button(matrixE[5][0], width=12, borderwidth=0,text="1 / x", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("1 / x"))
 divB.place(x=2, y=3)
 
-raizB = Button(matrixE[5][1], width=12, borderwidth=0,text="√ x", font=("Arial", 10), bg="#3B404F", fg="white")
+raizB = Button(matrixE[5][1], width=12, borderwidth=0,text="√ x", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("√ x"))
 raizB.place(x=2, y=3)
 
-raizyB = Button(matrixE[5][2], width=12, borderwidth=0,text="√x", font=("Arial", 10), bg="#3B404F", fg="white")
+raizyB = Button(matrixE[5][2], width=12, borderwidth=0,text="√x", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("y√ x"))
 raizyB.place(x=2, y=3)
 raizyL = Label(MainWindow, text = "y", font=("Arial", 6), bg="#3B404F", fg="white")
 raizyL.place(x=260, y=308)
 
-expB = Button(matrixE[6][0], width=12, borderwidth=0,text="exp (x)", font=("Arial", 10), bg="#3B404F", fg="white")
-expB.place(x=2, y=3)
 
-xeyB = Button(matrixE[6][1], width=12, borderwidth=0,text="x ^ y", font=("Arial", 10), bg="#3B404F", fg="white")
+expB = Button(matrixE[6][0], width=12, borderwidth=0,text="e", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("e**x"))
+expB.place(x=2, y=3)
+expL = Label(MainWindow, text = "x", font=("Arial", 8), bg="#3B404F", fg="white")
+expL.place(x=63, y=342)
+
+xeyB = Button(matrixE[6][1], width=12, borderwidth=0,text="x ^ y", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("x ^ y"))
 xeyB.place(x=2, y=3)
 
-facB = Button(matrixE[6][2], width=12, borderwidth=0,text="x !", font=("Arial", 10), bg="#3B404F", fg="white")
+facB = Button(matrixE[6][2], width=12, borderwidth=0,text="x !", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("x !"))
 facB.place(x=2, y=3)
 
 
