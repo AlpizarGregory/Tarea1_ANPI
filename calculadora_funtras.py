@@ -195,7 +195,7 @@ def instructions():
     helpWindow.title("Guide")
     helpWindow.geometry(f"+{x-278}+{y}")
     # Add content to the secondary window
-    label = Label(helpWindow, bg="#212630", fg="white", anchor="w", font= ("Arial", 10) , text="1. Para utilizar la calculadora escriba en los \nespacios de X o Y según corresponda. Puede \n utilizar el teclado de su computadora o el\n de la misma calculadora. \n2. Luego proceda a seleccionar una de las\n funciones disponibles, observe que la\n mayoría de funciones utilizan unicamente X. \n\nCX: borra la entrada X. \nCY: borra la entrada Y. \nC: borra ambas entradas X y Y. \nCR: borra el resultado.")
+    label = Label(helpWindow, bg="#212630", fg="white", anchor="w", font= ("Arial", 10) , text="1. Para utilizar la calculadora escriba en los \nespacios de X o Y según corresponda. Puede \n utilizar el teclado de su computadora o el\n de la misma calculadora. \n2. Luego proceda a seleccionar una de las\n funciones disponibles, observe que la\n mayoría de funciones utilizan unicamente X. \n\nLos botones de signo negativo al lado de \ncada entrada permiten asignar valores\n menores a 0.\nPulse para negar la entrada correspondiente,\n pulse de nuevo para devolver la entrada a un \nvalor positivo.\n\nCX: borra la entrada X. \nCY: borra la entrada Y. \nC: borra ambas entradas X y Y. \nCR: borra el resultado.")
     label.pack(padx=0, pady=0)
     # Run the secondary window's main loop
     helpWindow.iconbitmap('C:\\Users\\Bryan Gómez\\Pictures\\calcico.ico')
@@ -263,7 +263,8 @@ def calcular(op):
     print(signo,signoY)    
         
     if not xE.get() or (xE.get() == "X"):
-        print("Vacio")   
+        resultE.insert(0, "Entrada X vacia")
+        return 0
     elif (op == "senh (x)"):
         result = funtras.sinh_t(signo*float(xE.get()))
     elif (op == "cosh (x)"):
@@ -332,7 +333,8 @@ def calcular(op):
         result = funtras.log_t(signo*float(xE.get()),10)
     elif (op == "logy (x)"):
         if not yE.get() or (yE.get() == "Y"):
-            print("Vacio")
+            resultE.insert(0, "Entrada Y vacia")
+            return 0
         elif (signo*float(xE.get()) == 0.0):
             resultE.insert(0, "X = 0, resultado indefinido")
             return 0
@@ -357,10 +359,14 @@ def calcular(op):
         result = funtras.sqrt_t(signo*float(xE.get()))
     elif (op == "y√ x"):
         if not yE.get() or (yE.get() == "Y"):
-            print("Vacio") 
+            resultE.insert(0, "Entrada Y vacia")
+            return 0 
         else:
             if nX:
                 resultE.insert(0, "X < 0, la calculadora no emplea números imaginarios")
+                return 0
+            if (signoY*float(yE.get()) == 0.0):
+                resultE.insert(0, "Y = 0, potencia 1/0 indefinido")
                 return 0
             result = funtras.root_t(signo*float(xE.get()),signoY*float(yE.get()))
 
@@ -368,7 +374,8 @@ def calcular(op):
         result = funtras.exp_t(signo*float(xE.get()))
     elif (op == "x ^ y"):
         if not yE.get() or (yE.get() == "Y"):
-            print("Vacio") 
+            resultE.insert(0, "Entrada Y vacia")
+            return 0
         else:
             if (signo*float(xE.get()) == 0.0) and (signoY*float(yE.get()) == 0.0):
                 resultE.insert(0, "X = Y = 0, forma indeterminada de potencia")
@@ -387,79 +394,79 @@ def calcular(op):
     
 
 
-senhB = Button(matrixE[0][0], width=12, borderwidth=0,text="senh (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("senh (x)"))
+senhB = Button(matrixE[0][0], width=12, borderwidth=0,text="senh (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("senh (x)"),activebackground="#4CC2FF",activeforeground="#212630")
 senhB.place(x=2, y=3)
 
-coshB = Button(matrixE[0][1], width=12, borderwidth=0,text="cosh (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("cosh (x)"))
+coshB = Button(matrixE[0][1], width=12, borderwidth=0,text="cosh (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("cosh (x)"),activebackground="#4CC2FF",activeforeground="#212630")
 coshB.place(x=2, y=3)
 
-tanhB = Button(matrixE[0][2], width=12, borderwidth=0,text="tanh (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("tanh (x)"))
+tanhB = Button(matrixE[0][2], width=12, borderwidth=0,text="tanh (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("tanh (x)"),activebackground="#4CC2FF",activeforeground="#212630")
 tanhB.place(x=2, y=3)
 
 
-asenB = Button(matrixE[1][0], width=12, borderwidth=0,text="asen (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("asen (x)"))
+asenB = Button(matrixE[1][0], width=12, borderwidth=0,text="asen (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("asen (x)"),activebackground="#4CC2FF",activeforeground="#212630")
 asenB.place(x=2, y=3)
 
-acosB = Button(matrixE[1][1], width=12, borderwidth=0,text="acos (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("acos (x)"))
+acosB = Button(matrixE[1][1], width=12, borderwidth=0,text="acos (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("acos (x)"),activebackground="#4CC2FF",activeforeground="#212630")
 acosB.place(x=2, y=3)
 
-atanB = Button(matrixE[1][2], width=12, borderwidth=0,text="atan (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("atan (x)"))
+atanB = Button(matrixE[1][2], width=12, borderwidth=0,text="atan (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("atan (x)"),activebackground="#4CC2FF",activeforeground="#212630")
 atanB.place(x=2, y=3)
 
 
-secB = Button(matrixE[2][0], width=12, borderwidth=0,text="sec (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("sec (x)"))
+secB = Button(matrixE[2][0], width=12, borderwidth=0,text="sec (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("sec (x)"),activebackground="#4CC2FF",activeforeground="#212630")
 secB.place(x=2, y=3)
 
-cscB = Button(matrixE[2][1], width=12, borderwidth=0,text="csc (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("csc (x)"))
+cscB = Button(matrixE[2][1], width=12, borderwidth=0,text="csc (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("csc (x)"),activebackground="#4CC2FF",activeforeground="#212630")
 cscB.place(x=2, y=3)
 
-cotB = Button(matrixE[2][2], width=12, borderwidth=0,text="cot (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("cot (x)"))
+cotB = Button(matrixE[2][2], width=12, borderwidth=0,text="cot (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("cot (x)"),activebackground="#4CC2FF",activeforeground="#212630")
 cotB.place(x=2, y=3)
 
 
-senB = Button(matrixE[3][0], width=12, borderwidth=0,text="sen (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("sen (x)"))
+senB = Button(matrixE[3][0], width=12, borderwidth=0,text="sen (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("sen (x)"),activebackground="#4CC2FF",activeforeground="#212630")
 senB.place(x=2, y=3)
 
-cosB = Button(matrixE[3][1], width=12, borderwidth=0,text="cos (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("cos (x)"))
+cosB = Button(matrixE[3][1], width=12, borderwidth=0,text="cos (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("cos (x)"),activebackground="#4CC2FF",activeforeground="#212630")
 cosB.place(x=2, y=3)
 
-tanB = Button(matrixE[3][2], width=12, borderwidth=0,text="tan (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("tan (x)"))
+tanB = Button(matrixE[3][2], width=12, borderwidth=0,text="tan (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("tan (x)"),activebackground="#4CC2FF",activeforeground="#212630")
 tanB.place(x=2, y=3)
 
 
-lnB = Button(matrixE[4][0], width=12, borderwidth=0,text="ln (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("ln (x)"))
+lnB = Button(matrixE[4][0], width=12, borderwidth=0,text="ln (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("ln (x)"),activebackground="#4CC2FF",activeforeground="#212630")
 lnB.place(x=2, y=3)
 
-log10B = Button(matrixE[4][1], width=12, borderwidth=0,text="log10 (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("log10 (x)"))
+log10B = Button(matrixE[4][1], width=12, borderwidth=0,text="log10 (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("log10 (x)"),activebackground="#4CC2FF",activeforeground="#212630")
 log10B.place(x=2, y=3)
 
-logyB = Button(matrixE[4][2], width=12, borderwidth=0,text="log  (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("logy (x)"))
+logyB = Button(matrixE[4][2], width=12, borderwidth=0,text="log  (x)", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("logy (x)"),activebackground="#4CC2FF",activeforeground="#212630")
 logyB.place(x=2, y=3)
 logyL = Label(MainWindow, text = "y", font=("Arial", 6), bg="#3B404F", fg="white")
 logyL.place(x=269, y=288)
 
 
-divB = Button(matrixE[5][0], width=12, borderwidth=0,text="1 / x", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("1 / x"))
+divB = Button(matrixE[5][0], width=12, borderwidth=0,text="1 / x", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("1 / x"),activebackground="#4CC2FF",activeforeground="#212630")
 divB.place(x=2, y=3)
 
-raizB = Button(matrixE[5][1], width=12, borderwidth=0,text="√ x", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("√ x"))
+raizB = Button(matrixE[5][1], width=12, borderwidth=0,text="√ x", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("√ x"),activebackground="#4CC2FF",activeforeground="#212630")
 raizB.place(x=2, y=3)
 
-raizyB = Button(matrixE[5][2], width=12, borderwidth=0,text="√x", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("y√ x"))
+raizyB = Button(matrixE[5][2], width=12, borderwidth=0,text="√x", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("y√ x"),activebackground="#4CC2FF",activeforeground="#212630")
 raizyB.place(x=2, y=3)
 raizyL = Label(MainWindow, text = "y", font=("Arial", 6), bg="#3B404F", fg="white")
 raizyL.place(x=260, y=308)
 
 
-expB = Button(matrixE[6][0], width=12, borderwidth=0,text="e", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("e**x"))
+expB = Button(matrixE[6][0], width=12, borderwidth=0,text="e", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("e**x"),activebackground="#4CC2FF",activeforeground="#212630")
 expB.place(x=2, y=3)
 expL = Label(MainWindow, text = "x", font=("Arial", 8), bg="#3B404F", fg="white")
 expL.place(x=63, y=342)
 
-xeyB = Button(matrixE[6][1], width=12, borderwidth=0,text="x ^ y", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("x ^ y"))
+xeyB = Button(matrixE[6][1], width=12, borderwidth=0,text="x ^ y", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("x ^ y"),activebackground="#4CC2FF",activeforeground="#212630")
 xeyB.place(x=2, y=3)
 
-facB = Button(matrixE[6][2], width=12, borderwidth=0,text="x !", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("x !"))
+facB = Button(matrixE[6][2], width=12, borderwidth=0,text="x !", font=("Arial", 10), bg="#3B404F", fg="white", command= lambda : calcular("x !"),activebackground="#4CC2FF",activeforeground="#212630")
 facB.place(x=2, y=3)
 
 
@@ -481,20 +488,20 @@ for k in range (3):
     numText = str(num)
     for z in range (3):
         numText = str(num)
-        numB = Button(matrixE[k+7][z], width=12, borderwidth=0,text=numText, font=("Arial", 10), bg=buttonsColor, fg="white", command=lambda numText=numText: select_num(numText))
+        numB = Button(matrixE[k+7][z], width=12, borderwidth=0,text=numText, font=("Arial", 10), bg=buttonsColor, fg="white", command=lambda numText=numText: select_num(numText),activebackground="#4CC2FF",activeforeground="#212630")
         numB.place(x=2, y=3)
         num+=1
         lstNums.append(numB)
     if num > 9:
         num = 0
         numText = str(num)
-        numB = Button(matrixE[10][1], width=12, borderwidth=0,text=numText, font=("Arial", 10), bg=buttonsColor, fg="white", command=lambda numText=numText: select_num(numText))
+        numB = Button(matrixE[10][1], width=12, borderwidth=0,text=numText, font=("Arial", 10), bg=buttonsColor, fg="white", command=lambda numText=numText: select_num(numText),activebackground="#4CC2FF",activeforeground="#212630")
         numB.place(x=2, y=3)
         lstNums.append(numB)
         print(lstNums[9]['text'])
         
-piB = Button(matrixE[10][0], width=12, borderwidth=0,text="π", font=("Arial", 10), bg=buttonsColor, fg="white", command=lambda: select_num("3.14159265358979323846"))
+piB = Button(matrixE[10][0], width=12, borderwidth=0,text="π", font=("Arial", 10), bg=buttonsColor, fg="white", command=lambda: select_num("3.14159265358979323846"),activebackground="#4CC2FF",activeforeground="#212630")
 piB.place(x=2, y=3)
 
-puntoB = Button(matrixE[10][2], width=12, borderwidth=0,text="·", font=("Arial", 10), bg=buttonsColor, fg="white", command=lambda: select_num("."))
+puntoB = Button(matrixE[10][2], width=12, borderwidth=0,text="·", font=("Arial", 10), bg=buttonsColor, fg="white", command=lambda: select_num("."),activebackground="#4CC2FF",activeforeground="#212630")
 puntoB.place(x=2, y=3)
