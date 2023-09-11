@@ -505,3 +505,5 @@ piB.place(x=2, y=3)
 
 puntoB = Button(matrixE[10][2], width=12, borderwidth=0,text="·", font=("Arial", 10), bg=buttonsColor, fg="white", command=lambda: select_num("."),activebackground="#4CC2FF",activeforeground="#212630")
 puntoB.place(x=2, y=3)
+
+MainWindow.mainloop()
