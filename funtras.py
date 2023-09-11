@@ -507,7 +507,7 @@ def csc_t(x):
 
 
 # pruebas
-
+"""
 print("")
 print("factorial_t")
 print("0!: ", factorial_t(0))
@@ -724,4 +724,4 @@ print("csc_t")
 print("csc 0: ", csc_t(0))
 print("csc pi: ", csc_t(pi_t))
 print("csc pi/2: ", csc_t(pi_t / 2))
-print("csc pi/4: ", csc_t(pi_t / 4))
+print("csc pi/4: ", csc_t(pi_t / 4)) """
